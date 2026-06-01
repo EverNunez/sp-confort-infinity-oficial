@@ -1,0 +1,87 @@
+// =============================================================
+//  Esquema de base de datos — SP Confort Infinity (oficial)
+//  Postgres (Supabase) vía Prisma.
+//  DATABASE_URL = conexión pooled (pgbouncer, puerto 6543)
+//  DIRECT_URL   = conexión directa para migraciones (puerto 5432)
+// =============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum StockStatus {
+  IN_STOCK // Disponible
+  ON_REQUEST // A pedido
+  OUT_OF_STOCK // Sin stock
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  visible     Boolean   @default(true)
+  order       Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([visible])
+}
+
+model Product {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  description      String? // descripción completa (modal)
+  shortDescription String? // descripción corta (card)
+  benefits         String[] // viñetas de beneficios
+  categoryId       String
+  category         Category    @relation(fields: [categoryId], references: [id])
+  price            Int? // en guaraníes (entero). null = sin precio cargado
+  priceVisible     Boolean     @default(false) // false => "Consultar precio"
+  imageUrl         String?
+  gallery          String[] // imágenes adicionales
+  brand            String?
+  model            String?
+  stockStatus      StockStatus @default(IN_STOCK)
+  featured         Boolean     @default(false)
+  visible          Boolean     @default(true)
+  order            Int         @default(0)
+  whatsappMessage  String? // mensaje personalizado opcional
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([categoryId])
+  @@index([visible])
+  @@index([featured])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Consultas/leads (preparado para fase 2 — registro opcional de consultas)
+model Lead {
+  id            String   @id @default(cuid())
+  productId     String?
+  productName   String?
+  customerName  String?
+  customerPhone String?
+  message       String?
+  source        String   @default("whatsapp")
+  createdAt     DateTime @default(now())
+}
