@@ -23,7 +23,7 @@ export default function Footer() {
               <Logo size={52} />
               <div>
                 <p className="font-serif text-lg font-semibold text-ink">
-                  SP Confort Infinity S.A.
+                  SP Confort Infinity
                 </p>
                 <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-copper-dark">
                   Un concepto de lujo
@@ -100,10 +100,10 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-ink/10 pt-6 sm:flex-row">
           <p className="text-xs text-ink-muted">
-            © {year} SP Confort Infinity S.A. — Todos los derechos reservados.
+            © {year} SP Confort Infinity — Todos los derechos reservados.
           </p>
           <p className="text-xs text-ink-muted">
-            Diseño demo · Un concepto de lujo
+            Sanitarios · Griferías · Equipamientos
           </p>
         </div>
       </div>

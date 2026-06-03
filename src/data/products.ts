@@ -1,36 +1,34 @@
 // =============================================================
-//  CATÁLOGO DE PRODUCTOS
-//  Editá / agregá productos aquí. Para usar fotos reales,
-//  colocá la imagen en /public/products con el nombre indicado
-//  en el campo `image` (ej: /products/fani-bold.jpg).
+//  CATÁLOGO DE PRODUCTOS (datos reales del cliente)
+//  Fuente del seed (prisma/seed.ts) y fallback público.
+//  TODOS los productos tienen foto real en /public/products.
+//  Categorías fijas (v1) alineadas a lo que maneja el cliente.
 // =============================================================
 
 export type CategoryId =
-  | "sanitarios"
   | "inodoros"
-  | "griferias-cocina"
-  | "griferias-bano"
-  | "duchas"
-  | "lavatorios"
   | "bachas"
-  | "accesorios"
-  | "muebles";
+  | "griferias-lavatorio"
+  | "griferias-cocina"
+  | "griferias-ducha"
+  | "termocalefones"
+  | "motores";
 
 export interface Category {
   id: CategoryId;
   label: string;
 }
 
+export type StockStatusValue = "IN_STOCK" | "ON_REQUEST" | "OUT_OF_STOCK";
+
 export const CATEGORIES: Category[] = [
-  { id: "sanitarios", label: "Sanitarios" },
   { id: "inodoros", label: "Inodoros" },
-  { id: "griferias-cocina", label: "Griferías de cocina" },
-  { id: "griferias-bano", label: "Griferías de baño" },
-  { id: "duchas", label: "Duchas" },
-  { id: "lavatorios", label: "Lavatorios" },
   { id: "bachas", label: "Bachas" },
-  { id: "accesorios", label: "Accesorios" },
-  { id: "muebles", label: "Muebles de baño" },
+  { id: "griferias-lavatorio", label: "Griferías para lavatorio" },
+  { id: "griferias-cocina", label: "Griferías para cocina" },
+  { id: "griferias-ducha", label: "Griferías para ducha" },
+  { id: "termocalefones", label: "Termocalefones" },
+  { id: "motores", label: "Motores" },
 ];
 
 export interface Product {
@@ -43,7 +41,8 @@ export interface Product {
   details: string;
   benefits: string[];
   price?: string; // opcional — si se omite se muestra "Consultar precio"
-  image: string; // ruta dentro de /public
+  image: string; // ruta dentro de /public (siempre foto real)
+  stockStatus?: StockStatusValue;
 }
 
 const categoryLabel = (id: CategoryId) =>
@@ -54,23 +53,236 @@ function p(data: Omit<Product, "categoryLabel">): Product {
 }
 
 export const PRODUCTS: Product[] = [
-  // ---------------- GRIFERÍAS DE COCINA ----------------
+  // ---------------- INODOROS ----------------
+  p({
+    id: "inodoro-celite-elite",
+    name: "Inodoro Celite Elite Blanco",
+    category: "inodoros",
+    brand: "Celite",
+    shortDescription:
+      "Kit completo de inodoro Celite Elite blanco, listo para instalar.",
+    details:
+      "Solución completa Celite Elite: inodoro con mochila acoplada, tapa, accesorios de fijación y conexión. Loza blanca esmaltada de alta resistencia y descarga eficiente.",
+    benefits: [
+      "Kit completo listo para instalar",
+      "Descarga eficiente",
+      "Loza esmaltada fácil de limpiar",
+    ],
+    image: "/products/celite-elite-blanco.jpg",
+  }),
+  p({
+    id: "inodoro-incepa-avant", // slug estable
+    name: "Inodoro Roca Nexo",
+    category: "inodoros",
+    brand: "Roca",
+    shortDescription:
+      "Kit de inodoro Roca Nexo con mochila acoplada, fácil y práctico.",
+    details:
+      "Kit de inodoro Roca Nexo con mochila acoplada, tapa y accesorios. Líneas modernas, gran prestación y el respaldo de la marca Roca para baños actuales.",
+    benefits: [
+      "Marca Roca de prestigio",
+      "Kit completo con accesorios",
+      "Líneas modernas y limpias",
+    ],
+    image: "/products/roca-nexo.jpg",
+  }),
+  p({
+    id: "juego-sanitario-celite-smart", // slug estable
+    name: "Inodoro Celite Smart",
+    category: "inodoros",
+    brand: "Celite",
+    shortDescription:
+      "Kit completo de inodoro Celite Smart, loza esmaltada de calidad.",
+    details:
+      "Inodoro Celite Smart con mochila acoplada, tapa y accesorios de instalación. Loza esmaltada con terminaciones finas y líneas modernas para baños actuales.",
+    benefits: [
+      "Kit completo Celite Smart",
+      "Loza esmaltada de calidad",
+      "Terminaciones finas y modernas",
+    ],
+    image: "/products/celite-smart.jpg",
+  }),
+
+  // ---------------- BACHAS ----------------
+  p({
+    id: "lavatorio-apoyo-ovalado", // slug estable
+    name: "Bacha Roca Inspira Round Blanco",
+    category: "bachas",
+    brand: "Roca",
+    shortDescription:
+      "Bacha de apoyo redonda Roca Inspira en blanco, diseño premium.",
+    details:
+      "Bacha de apoyo redonda de la línea Roca Inspira, en acabado blanco. Una pieza sofisticada que se luce sobre mesadas y muebles, ideal con griferías altas o de pared.",
+    benefits: [
+      "Diseño redondo premium",
+      "Marca Roca de prestigio",
+      "Combina con griferías altas",
+    ],
+    image: "/products/roca-inspira-round.jpg",
+  }),
+  p({
+    id: "bacha-apoyo-rectangular", // slug estable
+    name: "Bacha Incepa Platinum P4 Negro",
+    category: "bachas",
+    brand: "Incepa",
+    shortDescription:
+      "Bacha de apoyo cuadrada Incepa Platinum en negro mate, look moderno.",
+    details:
+      "Bacha de apoyo cuadrada de la línea Incepa Platinum (P4) en negro mate. Líneas rectas y aspecto contemporáneo, perfecta para baños minimalistas de diseño.",
+    benefits: [
+      "Acabado negro mate elegante",
+      "Líneas rectas contemporáneas",
+      "Pieza protagonista sobre la mesada",
+    ],
+    image: "/products/incepa-platinum-negro.jpg",
+  }),
+  p({
+    id: "incepa-platinum-rosa",
+    name: "Bacha Incepa Platinum P6 Rosa",
+    category: "bachas",
+    brand: "Incepa",
+    shortDescription:
+      "Bacha de apoyo cuadrada Incepa Platinum en rosa, tendencia y diseño.",
+    details:
+      "Bacha de apoyo cuadrada Incepa Platinum (P6) en delicado tono rosa. Una pieza de tendencia que aporta personalidad y calidez a baños de diseño.",
+    benefits: [
+      "Color rosa de tendencia",
+      "Líneas rectas contemporáneas",
+      "Loza de alta resistencia",
+    ],
+    image: "/products/incepa-platinum-rosa.jpg",
+  }),
+  p({
+    id: "incepa-platinum-gris",
+    name: "Bacha Incepa Platinum P5 Gris",
+    category: "bachas",
+    brand: "Incepa",
+    shortDescription:
+      "Bacha de apoyo cuadrada Incepa Platinum en gris, sobria y elegante.",
+    details:
+      "Bacha de apoyo cuadrada Incepa Platinum (P5) en gris. Tono neutro y sobrio que combina con cualquier mesada, para baños elegantes y atemporales.",
+    benefits: [
+      "Tono gris neutro y sobrio",
+      "Diseño cuadrado moderno",
+      "Combina con cualquier ambiente",
+    ],
+    image: "/products/incepa-platinum-gris.jpg",
+  }),
+  p({
+    id: "roca-ohtake-cafe",
+    name: "Bacha Roca Ohtake Café",
+    category: "bachas",
+    brand: "Roca",
+    shortDescription:
+      "Bacha de autor Roca by Ruy Ohtake en tono café, pieza exclusiva.",
+    details:
+      "Bacha de apoyo de diseño de autor, línea Roca by Ruy Ohtake, en cálido tono café. Formas orgánicas y acabado mate que la convierten en una pieza exclusiva y de lujo.",
+    benefits: [
+      "Diseño de autor (Ruy Ohtake)",
+      "Cálido tono café mate",
+      "Pieza exclusiva y premium",
+    ],
+    image: "/products/roca-ohtake-cafe.jpg",
+  }),
+
+  // ---------------- GRIFERÍAS PARA LAVATORIO ----------------
+  p({
+    id: "fani-cromo-lavatorio-alto", // slug estable
+    name: "Fani Retta Lavatorio Alto Cromado",
+    category: "griferias-lavatorio",
+    brand: "Fani",
+    shortDescription:
+      "Monocomando alto de líneas rectas para bachas de apoyo, cromado.",
+    details:
+      "Fani Retta en versión alta, de líneas rectas y acabado cromado espejado. Su altura es ideal para bachas de apoyo, con cierre cerámico preciso y durable.",
+    benefits: [
+      "Altura ideal para bachas de apoyo",
+      "Diseño recto contemporáneo",
+      "Acabado cromado espejado",
+    ],
+    image: "/products/fani-retta-cromado.jpg",
+  }),
+  p({
+    id: "fani-monocomando-lavatorio", // slug estable
+    name: "FV Iguazú Lavatorio Alto",
+    category: "griferias-lavatorio",
+    brand: "FV",
+    shortDescription:
+      "Monocomando alto FV Iguazú para bachas de apoyo, calidad reconocida.",
+    details:
+      "Grifería FV Iguazú en versión alta para lavatorios y bachas de apoyo. Respaldada por el prestigio de FV, combina diseño ergonómico con un cierre cerámico de larga vida.",
+    benefits: [
+      "Marca FV de calidad reconocida",
+      "Altura para bachas de apoyo",
+      "Cierre cerámico antigoteo",
+    ],
+    image: "/products/fv-iguazu-alto.jpg",
+  }),
+  p({
+    id: "griferia-pared-lavatorio", // slug estable
+    name: "FV Coty Lavatorio Negro",
+    category: "griferias-lavatorio",
+    brand: "FV",
+    shortDescription:
+      "Monocomando de lavatorio FV Coty en negro mate, diseño moderno.",
+    details:
+      "Grifería FV Coty para lavatorio en acabado negro mate. Una pieza de diseño actual que realza baños modernos y minimalistas, con la confiabilidad de FV.",
+    benefits: [
+      "Acabado negro mate antihuellas",
+      "Diseño moderno y sobrio",
+      "Marca FV de calidad reconocida",
+    ],
+    image: "/products/fv-coty-negro.jpg",
+  }),
+  p({
+    id: "deca-lavatorio",
+    name: "Deca Monocomando Lavatorio",
+    category: "griferias-lavatorio",
+    brand: "Deca",
+    shortDescription:
+      "Monocomando compacto de lavatorio, acabado cromado prolijo.",
+    details:
+      "Grifería Deca para lavatorio, de diseño compacto y acabado cromado. Manejo monocomando que regula caudal y temperatura, ideal para baños de uso diario.",
+    benefits: [
+      "Diseño compacto y limpio",
+      "Mezcla de temperatura precisa",
+      "Acabado cromado resistente",
+    ],
+    image: "/products/deca-lavatorio.jpg",
+  }),
+  p({
+    id: "celite-saveiro-lavatorio",
+    name: "Celite Saveiro Lavatorio",
+    category: "griferias-lavatorio",
+    brand: "Celite",
+    shortDescription:
+      "Monocomando de lavatorio Celite Saveiro, cromado y ergonómico.",
+    details:
+      "Grifería monocomando Celite línea Saveiro para lavatorio, de altura estándar, manija ergonómica y acabado cromado. Combina funcionalidad y estética para baños actuales.",
+    benefits: [
+      "Manija ergonómica de un toque",
+      "Acabado cromado espejado",
+      "Aireador que ahorra agua",
+    ],
+    image: "/products/celite-saveiro-lavatorio.jpg",
+  }),
+
+  // ---------------- GRIFERÍAS PARA COCINA ----------------
   p({
     id: "fani-bold-cocina",
     name: "Fani Bold Monocomando Cocina",
     category: "griferias-cocina",
     brand: "Fani",
     shortDescription:
-      "Monocomando de cocina con caño alto giratorio y líneas firmes.",
+      "Monocomando de cocina con caño alto giratorio, acabado cromado.",
     details:
-      "La grifería Fani Bold aporta carácter a la cocina con un caño alto giratorio que facilita el lavado de ollas y recipientes grandes. Cartucho cerámico de alta precisión para un cierre suave y sin goteos, en acabado cromado de larga duración.",
+      "Grifería Fani Bold para cocina, con caño alto giratorio que facilita el lavado de ollas y recipientes grandes. Cierre cerámico preciso y acabado cromado de larga duración.",
     benefits: [
-      "Caño alto giratorio 360°",
-      "Cartucho cerámico de larga vida útil",
-      "Acabado cromado resistente a la corrosión",
+      "Caño alto giratorio",
+      "Cierre cerámico antigoteo",
+      "Acabado cromado resistente",
     ],
-    price: "Consultar precio",
-    image: "/products/griferia-cocina-oro.jpg",
+    image: "/products/fani-bold-cocina.jpg",
   }),
   p({
     id: "fani-domus-cocina",
@@ -78,374 +290,164 @@ export const PRODUCTS: Product[] = [
     category: "griferias-cocina",
     brand: "Fani",
     shortDescription:
-      "Monocomando de cocina con silueta curva y manejo de un solo toque.",
+      "Monocomando de cocina de silueta curva y manejo de un solo toque.",
     details:
-      "Fani Domus combina una silueta curva elegante con un manejo monocomando preciso que regula caudal y temperatura con un solo movimiento. Ideal para cocinas modernas que buscan funcionalidad y estética en igual medida.",
+      "Fani Domus combina una silueta curva elegante con un manejo monocomando preciso que regula caudal y temperatura con un solo movimiento. Ideal para cocinas modernas.",
     benefits: [
       "Apertura y mezcla con un solo toque",
       "Silueta curva contemporánea",
       "Aireador que optimiza el consumo de agua",
     ],
-    price: "Consultar precio",
-    image: "/products/fani-domus.jpg",
+    image: "/products/fani-domus-cocina.jpg",
   }),
   p({
-    id: "fani-gourmet-cocina-flexible",
-    name: "Fani Gourmet Cocina Flexible",
+    id: "fv-temple-cocina", // slug estable
+    name: "Docol Monocomando Cocina Negro",
     category: "griferias-cocina",
-    brand: "Fani",
+    brand: "Docol",
     shortDescription:
-      "Grifería de cocina con caño flexible extensible tipo gastronómico.",
+      "Monocomando de cocina negro mate con caño alto y función mezclador.",
     details:
-      "La Fani Gourmet incorpora un caño flexible extensible tipo resorte que ofrece total libertad de movimiento sobre la pileta. Perfecta para quienes cocinan a diario y buscan la practicidad de una grifería profesional en casa.",
+      "Grifería de cocina Docol en negro mate, con caño alto giratorio y función mezclador. Diseño sobrio y moderno que aporta carácter a cocinas de estilo actual.",
     benefits: [
-      "Caño flexible extensible tipo resorte",
-      "Amplio rango de movimiento sobre la pileta",
+      "Acabado negro mate elegante",
+      "Caño alto giratorio",
+      "Función mezclador (agua fría/caliente)",
+    ],
+    image: "/products/docol-cocina-negro.jpg",
+  }),
+  p({
+    id: "fani-gourmet-cocina-flexible", // slug estable
+    name: "Docol Cocina Gourmet Flexible",
+    category: "griferias-cocina",
+    brand: "Docol",
+    shortDescription:
+      "Grifería gastronómica con caño flexible extensible, estilo profesional.",
+    details:
+      "Grifería de cocina Docol tipo gastronómica, con caño flexible extensible que ofrece total libertad de movimiento sobre la pileta. Perfecta para quienes cocinan a diario.",
+    benefits: [
+      "Caño flexible extensible",
       "Estilo gastronómico profesional",
+      "Amplio rango de movimiento",
     ],
-    price: "Consultar precio",
-    image: "/products/fani-gourmet.jpg",
-  }),
-  p({
-    id: "fv-temple-cocina",
-    name: "FV Temple Monocomando Cocina",
-    category: "griferias-cocina",
-    brand: "FV",
-    shortDescription:
-      "Monocomando FV Temple, calidad reconocida para la cocina del hogar.",
-    details:
-      "FV Temple es sinónimo de confiabilidad. Grifería monocomando con tecnología de cierre cerámico y un diseño atemporal que se adapta a todo tipo de cocina, respaldada por el prestigio de la marca FV.",
-    benefits: [
-      "Marca FV de calidad reconocida",
-      "Cierre cerámico antigoteo",
-      "Diseño atemporal y versátil",
-    ],
-    price: "Consultar precio",
-    image: "/products/fv-temple.jpg",
+    image: "/products/docol-cocina-flexible.jpg",
   }),
 
-  // ---------------- GRIFERÍAS DE BAÑO ----------------
+  // ---------------- GRIFERÍAS PARA DUCHA ----------------
   p({
-    id: "fani-cromo-lavatorio-alto",
-    name: "Fani Cromo Lavatorio Alto",
-    category: "griferias-bano",
-    brand: "Fani",
-    shortDescription:
-      "Grifería alta cromada para lavatorios y bachas de apoyo.",
-    details:
-      "Fani Cromo en versión alta es la elección perfecta para bachas de apoyo. Su acabado cromado espejado realza cualquier lavatorio y su altura facilita el uso diario, con un cierre cerámico preciso y duradero.",
-    benefits: [
-      "Altura ideal para bachas de apoyo",
-      "Acabado cromado espejado",
-      "Aireador que ahorra agua",
-    ],
-    price: "Consultar precio",
-    image: "/products/fani-cromo.jpg",
-  }),
-  p({
-    id: "fani-monocomando-lavatorio",
-    name: "Fani Monocomando Lavatorio",
-    category: "griferias-bano",
-    brand: "Fani",
-    shortDescription:
-      "Monocomando compacto para lavatorios, mezcla precisa de agua.",
-    details:
-      "Grifería monocomando Fani para lavatorio, de altura estándar y diseño limpio. Regula temperatura y caudal con un solo movimiento, ideal para baños modernos y de uso intensivo.",
-    benefits: [
-      "Mezcla de temperatura precisa",
-      "Diseño compacto y limpio",
-      "Instalación sencilla",
-    ],
-    price: "Consultar precio",
-    image: "/products/griferia-bano-oro.jpg",
-  }),
-  p({
-    id: "griferia-pared-lavatorio",
-    name: "Grifería de Pared para Lavatorio",
-    category: "griferias-bano",
-    shortDescription:
-      "Grifería de empotrar a pared, estética minimalista y sofisticada.",
-    details:
-      "Grifería de pared para lavatorio que libera la mesada y aporta un aire minimalista y sofisticado al baño. Su caño prolongado se luce sobre bachas de apoyo y mesadas de diseño.",
-    benefits: [
-      "Instalación empotrada a pared",
-      "Libera espacio en la mesada",
-      "Estética minimalista premium",
-    ],
-    price: "Consultar precio",
-    image: "/products/griferia-pared.jpg",
-  }),
-
-  // ---------------- INODOROS ----------------
-  p({
-    id: "inodoro-celite-elite",
-    name: "Inodoro Celite Elite",
-    category: "inodoros",
+    id: "ducha-lluvia-cuadrada", // slug estable
+    name: "Celite Saveiro Ducha Embutida",
+    category: "griferias-ducha",
     brand: "Celite",
     shortDescription:
-      "Inodoro Celite Elite con descarga eficiente y diseño sobrio.",
+      "Monocomando de ducha embutido Celite Saveiro, estética minimalista.",
     details:
-      "El inodoro Celite Elite ofrece una descarga potente y eficiente de doble acción, con un diseño sobrio que combina con cualquier baño. Loza de alta resistencia y acabado esmaltado que facilita la limpieza diaria.",
+      "Monocomando de ducha embutido (de empotrar) línea Celite Saveiro, con desviador. Libera la pared y aporta una estética minimalista y limpia al baño.",
     benefits: [
-      "Descarga eficiente de doble acción",
-      "Loza esmaltada fácil de limpiar",
-      "Diseño sobrio y atemporal",
+      "Instalación embutida (de empotrar)",
+      "Desviador para ducha/teléfono",
+      "Acabado cromado de larga duración",
     ],
-    price: "Consultar precio",
-    image: "/products/inodoro-suite.jpg",
+    image: "/products/ducha-celite-saveiro-embutida.jpg",
   }),
   p({
-    id: "inodoro-incepa-avant",
-    name: "Inodoro Incepa Avant",
-    category: "inodoros",
-    brand: "Incepa",
-    shortDescription:
-      "Inodoro Incepa Avant de líneas modernas y gran prestación.",
-    details:
-      "Incepa Avant destaca por sus líneas modernas y su excelente prestación. Una pieza que aporta estilo contemporáneo al baño manteniendo la máxima funcionalidad y un consumo de agua optimizado.",
-    benefits: [
-      "Líneas modernas y limpias",
-      "Marca Incepa de prestigio",
-      "Óptimo rendimiento de descarga",
-    ],
-    price: "Consultar precio",
-    image: "/products/inodoro-incepa.jpg",
-  }),
-  p({
-    id: "inodoro-mochila-acoplada",
-    name: "Inodoro con Mochila Acoplada",
-    category: "inodoros",
-    shortDescription:
-      "Inodoro con mochila acoplada y doble descarga, ahorro de agua.",
-    details:
-      "Inodoro con mochila acoplada y sistema de doble descarga (3/6 litros) para un uso responsable del agua. Diseño compacto que se adapta a baños de cualquier tamaño con una instalación práctica.",
-    benefits: [
-      "Doble descarga 3/6 litros",
-      "Ahorro de agua",
-      "Instalación práctica y compacta",
-    ],
-    price: "Consultar precio",
-    image: "/products/inodoro-mochila.jpg",
-  }),
-
-  // ---------------- SANITARIOS ----------------
-  p({
-    id: "combo-sanitario-completo",
-    name: "Combo Sanitario Completo",
-    category: "sanitarios",
-    shortDescription:
-      "Conjunto de inodoro y lavatorio a juego para renovar el baño.",
-    details:
-      "Combo sanitario que incluye inodoro y lavatorio diseñados para combinar perfectamente entre sí. La forma más simple y elegante de renovar el baño por completo con piezas a juego.",
-    benefits: [
-      "Piezas diseñadas para combinar",
-      "Renovación integral del baño",
-      "Excelente relación calidad-precio",
-    ],
-    price: "Consultar precio",
-    image: "/products/combo-sanitario.jpg",
-  }),
-  p({
-    id: "juego-sanitario-celite-smart",
-    name: "Juego Sanitario Celite Smart",
-    category: "sanitarios",
+    id: "ducha-electrica", // slug estable
+    name: "Celite Saveiro Ducha Externa",
+    category: "griferias-ducha",
     brand: "Celite",
     shortDescription:
-      "Juego sanitario Celite de loza blanca con terminaciones finas.",
+      "Monocomando de ducha externo Celite Saveiro con ducha de mano.",
     details:
-      "Juego sanitario Celite Smart en loza blanca esmaltada, con terminaciones finas y líneas modernas. Un conjunto que combina higiene, durabilidad y estética para baños actuales.",
+      "Monocomando de ducha externo línea Celite Saveiro, incluye ducha de mano y flexible. Instalación práctica a la vista, con manejo de un solo comando.",
     benefits: [
-      "Loza blanca esmaltada de calidad",
-      "Terminaciones finas y modernas",
-      "Marca Celite reconocida",
+      "Incluye ducha de mano y flexible",
+      "Manejo monocomando práctico",
+      "Acabado cromado resistente",
     ],
-    price: "Consultar precio",
-    image: "/products/juego-celite.jpg",
+    image: "/products/ducha-celite-saveiro-externa.jpg",
   }),
 
-  // ---------------- DUCHAS ----------------
+  // ---------------- TERMOCALEFONES ----------------
   p({
-    id: "ducha-electrica",
-    name: "Ducha Eléctrica",
-    category: "duchas",
+    id: "termocalefon-ariston-80",
+    name: "Termocalefón Ariston 80L Horizontal",
+    category: "termocalefones",
+    brand: "Ariston",
     shortDescription:
-      "Ducha eléctrica con regulación de temperatura y bajo consumo.",
+      "Termocalefón eléctrico Ariston de 80 litros, instalación horizontal.",
     details:
-      "Ducha eléctrica de instalación práctica con varios niveles de temperatura. Solución eficiente para agua caliente al instante, sin necesidad de termotanque, ideal para optimizar el consumo energético.",
+      "Termocalefón eléctrico Ariston de 80 litros para instalación horizontal. Calienta y conserva el agua de forma eficiente, con el respaldo y la garantía de la marca Ariston.",
     benefits: [
-      "Agua caliente instantánea",
-      "Varios niveles de temperatura",
-      "Instalación práctica y eficiente",
+      "80 litros de capacidad",
+      "Instalación horizontal",
+      "Marca Ariston con garantía",
     ],
-    price: "Consultar precio",
-    image: "/products/ducha-electrica.jpg",
+    image: "/products/termocalefon-ariston-80-horizontal.jpg",
   }),
   p({
-    id: "ducha-lluvia-cuadrada",
-    name: "Ducha de Lluvia Cuadrada",
-    category: "duchas",
+    id: "termocalefon-ferroli-80",
+    name: "Termocalefón Ferroli 80L Vertical",
+    category: "termocalefones",
+    brand: "Ferroli",
     shortDescription:
-      "Regadera tipo lluvia de gran formato para una experiencia spa.",
+      "Termocalefón eléctrico Ferroli de 80 litros, instalación vertical.",
     details:
-      "Ducha de lluvia cuadrada de gran formato que recrea una experiencia de spa en casa. Su caudal envolvente y su acabado cromado aportan confort y un toque de lujo al baño moderno.",
+      "Termocalefón eléctrico Ferroli de 80 litros para instalación vertical, con termostato regulable. Solución confiable de agua caliente para el hogar.",
     benefits: [
-      "Caudal envolvente tipo lluvia",
-      "Gran formato cuadrado",
-      "Acabado cromado de lujo",
+      "80 litros de capacidad",
+      "Instalación vertical",
+      "Termostato regulable",
     ],
-    price: "Consultar precio",
-    image: "/products/ducha-lluvia.jpg",
-  }),
-
-  // ---------------- LAVATORIOS ----------------
-  p({
-    id: "lavatorio-apoyo-ovalado",
-    name: "Lavatorio de Apoyo Ovalado",
-    category: "lavatorios",
-    shortDescription:
-      "Bacha de apoyo ovalada en loza blanca para baños elegantes.",
-    details:
-      "Lavatorio de apoyo de forma ovalada en loza blanca esmaltada. Una pieza sofisticada que se luce sobre mesadas y muebles, ideal para combinar con griferías altas o de pared.",
-    benefits: [
-      "Loza blanca esmaltada",
-      "Forma ovalada elegante",
-      "Combina con griferías altas",
-    ],
-    price: "Consultar precio",
-    image: "/products/lavatorio-vessel.jpg",
-  }),
-  p({
-    id: "bacha-apoyo-rectangular",
-    name: "Bacha de Apoyo Rectangular",
-    category: "lavatorios",
-    shortDescription:
-      "Bacha de apoyo rectangular de líneas rectas y look contemporáneo.",
-    details:
-      "Bacha de apoyo rectangular en loza blanca, de líneas rectas y aspecto contemporáneo. Perfecta para baños minimalistas que buscan una pieza protagonista sobre la mesada.",
-    benefits: [
-      "Líneas rectas contemporáneas",
-      "Loza de alta resistencia",
-      "Ideal para baños minimalistas",
-    ],
-    price: "Consultar precio",
-    image: "/products/bacha-rectangular.jpg",
+    image: "/products/termocalefon-ferroli-80-vertical.jpg",
   }),
 
-  // ---------------- BACHAS (COCINA) ----------------
+  // ---------------- MOTORES ----------------
   p({
-    id: "bacha-cocina-acero",
-    name: "Bacha de Cocina Acero Inoxidable",
-    category: "bachas",
+    id: "motor-valco-casalinga",
+    name: "Motor Valco Casalinga 0.5HP",
+    category: "motores",
+    brand: "Valco",
     shortDescription:
-      "Bacha de acero inoxidable resistente, ideal para cocinas modernas.",
+      "Motobomba periférica Valco Casalinga de 0.5 HP para uso doméstico.",
     details:
-      "Bacha de cocina en acero inoxidable de alta resistencia, fácil de limpiar e higiénica. Su acabado satinado disimula las marcas de uso y resiste el día a día. Disponible en distintas medidas.",
+      "Motobomba periférica Valco Casalinga de 0.5 HP, ideal para presurizar el agua en viviendas. Cuerpo robusto y funcionamiento confiable para el día a día.",
     benefits: [
-      "Acero inoxidable de alta resistencia",
-      "Higiénica y fácil de limpiar",
-      "Acabado satinado anti-marcas",
+      "0.5 HP de potencia",
+      "Ideal para uso doméstico",
+      "Cuerpo resistente",
     ],
-    price: "Consultar precio",
-    image: "/products/bacha-cocina.jpg",
+    image: "/products/motor-valco-casalinga-05hp.jpg",
   }),
   p({
-    id: "bacha-doble-cocina",
-    name: "Bacha Doble de Cocina",
-    category: "bachas",
+    id: "motor-valco-irrigua",
+    name: "Motor Valco Irrigua C3 1HP",
+    category: "motores",
+    brand: "Valco",
     shortDescription:
-      "Bacha doble de acero inoxidable para mayor capacidad de trabajo.",
+      "Motobomba periférica Valco Irrigua C3 de 1 HP, mayor caudal y presión.",
     details:
-      "Bacha doble de acero inoxidable que ofrece más espacio y practicidad para lavar y enjuagar al mismo tiempo. Ideal para cocinas con alto uso diario que requieren máxima funcionalidad.",
+      "Motobomba periférica Valco Irrigua C3 de 1 HP, con mayor caudal y presión. Apta para viviendas más grandes y exigencias de riego o presurización.",
     benefits: [
-      "Dos cubetas para más capacidad",
-      "Acero inoxidable resistente",
-      "Mayor practicidad de trabajo",
+      "1 HP de potencia",
+      "Mayor caudal y presión",
+      "Uso doméstico e industrial liviano",
     ],
-    price: "Consultar precio",
-    image: "/products/bacha-doble.jpg",
-  }),
-
-  // ---------------- ACCESORIOS ----------------
-  p({
-    id: "kit-sevilla-negro-mate",
-    name: "Kit Sevilla Negro Mate",
-    category: "accesorios",
-    shortDescription:
-      "Set de accesorios de baño en acabado negro mate, elegante y resistente.",
-    details:
-      "Kit completo de accesorios Sevilla en negro mate: combina a la perfección con ambientes modernos y minimalistas. Incluye piezas coordinadas con acabado antihuellas y materiales de alta durabilidad para uso diario.",
-    benefits: [
-      "Acabado negro mate antihuellas",
-      "Piezas coordinadas para todo el baño",
-      "Fijación firme y duradera",
-    ],
-    price: "Consultar precio",
-    image: "/products/kit-sevilla-negro-mate.jpg",
+    image: "/products/motor-valco-irrigua-c3-1hp.jpg",
   }),
   p({
-    id: "agarradero-bano",
-    name: "Agarradero de Seguridad para Baño",
-    category: "accesorios",
+    id: "motor-valco-jeet",
+    name: "Motor Valco Jet 148",
+    category: "motores",
+    brand: "Valco",
     shortDescription:
-      "Barra de apoyo y seguridad para baño, fijación firme y acabado fino.",
+      "Motobomba autocebante Valco Jet 148, ideal para pozos y tanques.",
     details:
-      "Agarradero de seguridad pensado para brindar apoyo en el baño con la máxima firmeza. Su acabado elegante combina seguridad y estética, sin descuidar el diseño del ambiente.",
+      "Motobomba autocebante Valco Jet 148, ideal para extraer agua de pozos, aljibes y tanques. Construcción robusta y autocebado para una puesta en marcha sencilla.",
     benefits: [
-      "Brinda apoyo y seguridad",
-      "Fijación firme a la pared",
-      "Acabado resistente a la humedad",
+      "Autocebante (sistema jet)",
+      "Ideal para pozos y aljibes",
+      "Construcción robusta",
     ],
-    price: "Consultar precio",
-    image: "/products/agarradero-bano.jpg",
-  }),
-  p({
-    id: "toallero-cromado",
-    name: "Toallero Cromado",
-    category: "accesorios",
-    shortDescription:
-      "Toallero de barra en acabado cromado, terminación brillante y sólida.",
-    details:
-      "Toallero de barra en acabado cromado brillante, con terminación sólida y fijación segura. Un accesorio funcional que completa el baño con un detalle pulcro y duradero.",
-    benefits: [
-      "Acabado cromado brillante",
-      "Estructura sólida y estable",
-      "Fijación segura a la pared",
-    ],
-    price: "Consultar precio",
-    image: "/products/toallero-cromado.jpg",
-  }),
-
-  // ---------------- MUEBLES DE BAÑO ----------------
-  p({
-    id: "mueble-bano-suspendido",
-    name: "Mueble de Baño Suspendido",
-    category: "muebles",
-    shortDescription:
-      "Mueble de baño suspendido con bacha integrada y amplio guardado.",
-    details:
-      "Mueble de baño suspendido que optimiza el espacio y aporta un look moderno y liviano. Incluye bacha integrada y cajones de gran capacidad con cierre suave para una experiencia premium.",
-    benefits: [
-      "Bacha integrada",
-      "Cajones con cierre suave",
-      "Diseño suspendido que amplía el espacio",
-    ],
-    price: "Consultar precio",
-    image: "/products/lavatorio-marmol-oro.jpg",
-  }),
-  p({
-    id: "mueble-bano-espejo",
-    name: "Mueble de Baño con Espejo",
-    category: "muebles",
-    shortDescription:
-      "Conjunto de mueble con bacha y espejo a juego para el baño.",
-    details:
-      "Conjunto de mueble de baño con bacha y espejo a juego, pensado para renovar el baño con un set completo y coordinado. Combina guardado, estética y funcionalidad en una sola solución.",
-    benefits: [
-      "Mueble, bacha y espejo coordinados",
-      "Set completo listo para instalar",
-      "Guardado funcional y elegante",
-    ],
-    price: "Consultar precio",
-    image: "/products/mueble-espejo.jpg",
+    image: "/products/motor-valco-jeet-148.jpg",
   }),
 ];

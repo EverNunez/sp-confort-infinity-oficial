@@ -67,6 +67,7 @@ export async function getCatalog(): Promise<{
       benefits: p.benefits ?? [],
       price: p.priceVisible && p.price != null ? formatGs(p.price) : undefined,
       image: p.imageUrl ?? "",
+      stockStatus: p.stockStatus,
     }));
 
     return { products, categories, source: "db" };

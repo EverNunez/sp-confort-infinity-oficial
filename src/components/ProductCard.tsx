@@ -4,13 +4,17 @@ import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle, Eye } from "lucide-react";
 import type { Product } from "@/data/products";
-import { productWhatsappLink } from "@/lib/site";
+import { stockCta } from "@/lib/stock";
 import ProductImage from "./ProductImage";
+import StockBadge from "./StockBadge";
 
 const ProductCard = forwardRef<
   HTMLElement,
   { product: Product; index?: number; onView: (product: Product) => void }
 >(function ProductCard({ product, index = 0, onView }, ref) {
+  const cta = stockCta(product.name, product.stockStatus);
+  const isOut = product.stockStatus === "OUT_OF_STOCK";
+  const isOnRequest = product.stockStatus === "ON_REQUEST";
   return (
     <motion.article
       ref={ref}
@@ -30,8 +34,23 @@ const ProductCard = forwardRef<
           src={product.image}
           alt={product.name}
           category={product.category}
-          className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
+          className={`h-full w-full transition-transform duration-700 ease-out group-hover:scale-105 ${
+            isOut ? "grayscale-[35%]" : ""
+          }`}
         />
+        {isOut && (
+          <>
+            <div className="pointer-events-none absolute inset-0 bg-white/45" />
+            <span className="absolute right-3 top-3 rounded-full bg-ink/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-sand-50 backdrop-blur">
+              Sin stock
+            </span>
+          </>
+        )}
+        {isOnRequest && (
+          <span className="absolute right-3 top-3 rounded-full bg-gradient-to-r from-copper to-copper-dark px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white shadow-soft">
+            A pedido
+          </span>
+        )}
         <span className="absolute left-3 top-3 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-copper-dark backdrop-blur">
           {product.categoryLabel}
         </span>
@@ -62,21 +81,22 @@ const ProductCard = forwardRef<
           {product.shortDescription}
         </p>
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between gap-2">
           <span className="text-sm font-semibold text-copper-dark">
             {product.price ?? "Consultar precio"}
           </span>
+          <StockBadge status={product.stockStatus} />
         </div>
 
         <div className="mt-4 flex gap-2">
           <a
-            href={productWhatsappLink(product.name)}
+            href={cta.href}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp flex-1 px-3 py-2.5 text-xs"
           >
             <MessageCircle className="h-4 w-4" />
-            Comprar
+            {cta.label}
           </a>
           <button
             type="button"

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CategoryId } from "@/data/products";
-import { Bath, Droplets, ShowerHead, Sparkles } from "lucide-react";
+import { Bath, Droplets, ShowerHead, Thermometer, Cog } from "lucide-react";
 
 /**
  * Imagen de producto con fallback elegante.
@@ -12,23 +12,21 @@ import { Bath, Droplets, ShowerHead, Sparkles } from "lucide-react";
  */
 
 const GRADIENTS: Record<CategoryId, string> = {
-  sanitarios: "from-sand-200 via-sand-100 to-white",
   inodoros: "from-sand-100 via-white to-sand-200",
+  bachas: "from-white via-sand-100 to-sand-200",
+  "griferias-lavatorio": "from-[#eee9e1] via-white to-[#e7ded0]",
   "griferias-cocina": "from-[#ece6dc] via-white to-[#f5f2ed]",
-  "griferias-bano": "from-[#eee9e1] via-white to-[#e7ded0]",
-  duchas: "from-[#e9ede9] via-white to-[#eef1ef]",
-  lavatorios: "from-white via-sand-100 to-sand-200",
-  bachas: "from-[#e8e9ea] via-white to-[#eef0f1]",
-  accesorios: "from-sand-200 via-white to-sand-100",
-  muebles: "from-[#ece4d8] via-white to-[#efe7da]",
+  "griferias-ducha": "from-[#e9ede9] via-white to-[#eef1ef]",
+  termocalefones: "from-sand-200 via-white to-sand-100",
+  motores: "from-[#e8e9ea] via-white to-[#eef0f1]",
 };
 
 function CategoryIcon({ category }: { category: CategoryId }) {
   const cls = "h-10 w-10 text-copper";
-  if (category === "duchas") return <ShowerHead className={cls} />;
-  if (category === "accesorios" || category === "muebles")
-    return <Sparkles className={cls} />;
-  if (category === "inodoros" || category === "sanitarios" || category === "lavatorios")
+  if (category === "griferias-ducha") return <ShowerHead className={cls} />;
+  if (category === "termocalefones") return <Thermometer className={cls} />;
+  if (category === "motores") return <Cog className={cls} />;
+  if (category === "inodoros" || category === "bachas")
     return <Bath className={cls} />;
   return <Droplets className={cls} />;
 }

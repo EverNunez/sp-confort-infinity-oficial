@@ -13,6 +13,7 @@ import {
   Loader2,
   Check,
   X,
+  ImageOff,
 } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import type { CategoryId } from "@/data/products";
@@ -120,6 +121,11 @@ export default function ProductsTable({
                 {!p.visible && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-ink/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
                     <EyeOff className="h-3 w-3" /> Oculto
+                  </span>
+                )}
+                {!p.imageUrl && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 ring-1 ring-inset ring-amber-600/20">
+                    <ImageOff className="h-3 w-3" /> Sin imagen
                   </span>
                 )}
               </div>

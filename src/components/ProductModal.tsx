@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageCircle, Check, Tag } from "lucide-react";
 import type { Product } from "@/data/products";
-import { productWhatsappLink } from "@/lib/site";
+import { stockCta } from "@/lib/stock";
 import ProductImage from "./ProductImage";
+import StockBadge from "./StockBadge";
 
 export default function ProductModal({
   product,
@@ -71,8 +72,25 @@ export default function ProductModal({
                 src={product.image}
                 alt={product.name}
                 category={product.category}
-                className="h-full w-full"
+                className={`h-full w-full ${
+                  product.stockStatus === "OUT_OF_STOCK"
+                    ? "grayscale-[35%]"
+                    : ""
+                }`}
               />
+              {product.stockStatus === "OUT_OF_STOCK" && (
+                <>
+                  <div className="pointer-events-none absolute inset-0 bg-white/40" />
+                  <span className="absolute left-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-sand-50 backdrop-blur">
+                    Sin stock
+                  </span>
+                </>
+              )}
+              {product.stockStatus === "ON_REQUEST" && (
+                <span className="absolute left-4 top-4 rounded-full bg-gradient-to-r from-copper to-copper-dark px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white shadow-soft">
+                  A pedido
+                </span>
+              )}
             </div>
 
             {/* Detalles */}
@@ -92,6 +110,10 @@ export default function ProductModal({
               <h3 className="mt-4 font-serif text-2xl font-semibold leading-tight text-ink sm:text-3xl">
                 {product.name}
               </h3>
+
+              <div className="mt-3">
+                <StockBadge status={product.stockStatus} />
+              </div>
 
               <p className="mt-4 text-sm leading-relaxed text-ink-muted">
                 {product.details}
@@ -123,13 +145,13 @@ export default function ProductModal({
               </div>
 
               <a
-                href={productWhatsappLink(product.name)}
+                href={stockCta(product.name, product.stockStatus).href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-whatsapp mt-6 w-full"
               >
                 <MessageCircle className="h-5 w-5" />
-                Comprar por WhatsApp
+                {stockCta(product.name, product.stockStatus).longLabel}
               </a>
             </div>
           </motion.div>

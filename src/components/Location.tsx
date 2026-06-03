@@ -29,12 +29,7 @@ export default function Location() {
           {/* Datos */}
           <Reveal direction="right" className="lg:col-span-2">
             <div className="card flex h-full flex-col gap-6 p-8">
-              <InfoRow
-                icon={MapPin}
-                title="Dirección"
-                value={SITE.city}
-                note="Editá la dirección exacta en src/lib/site.ts"
-              />
+              <InfoRow icon={MapPin} title="Dirección" value={SITE.city} />
               <div className="h-px bg-ink/5" />
               <InfoRow
                 icon={MessageCircle}

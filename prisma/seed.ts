@@ -1,10 +1,11 @@
 /**
- * Seed inicial — categorías, productos (migrados del demo) y usuario admin.
- * Idempotente: se puede correr varias veces sin duplicar.
+ * Seed — categorías reales, productos reales (con foto) y usuario admin.
+ * Idempotente. Estrategia segura:
+ *  - Carga SOLO productos con imagen real.
+ *  - Oculta (visible=false, sin borrar) los productos viejos sin foto.
+ *  - Oculta las categorías que ya no se usan.
  *
  *   npm run db:seed
- *
- * El admin se crea con ADMIN_EMAIL / ADMIN_PASSWORD del entorno.
  */
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
@@ -13,7 +14,7 @@ import { PRODUCTS, CATEGORIES } from "../src/data/products";
 const prisma = new PrismaClient();
 
 async function main() {
-  // 1) Categorías
+  // 1) Categorías reales
   for (const [i, c] of CATEGORIES.entries()) {
     await prisma.category.upsert({
       where: { slug: c.id },
@@ -21,46 +22,65 @@ async function main() {
       create: { slug: c.id, name: c.label, order: i, visible: true },
     });
   }
+  const validCatSlugs = CATEGORIES.map((c) => c.id);
+  const hiddenCats = await prisma.category.updateMany({
+    where: { slug: { notIn: validCatSlugs } },
+    data: { visible: false },
+  });
   const cats = await prisma.category.findMany();
   const idBySlug = new Map(cats.map((c) => [c.slug, c.id]));
-  console.log(`✓ ${cats.length} categorías`);
+  console.log(
+    `✓ ${validCatSlugs.length} categorías reales · ${hiddenCats.count} viejas ocultadas`
+  );
 
-  // 2) Productos (migrados del catálogo demo, sin perder imágenes)
+  // 2) Productos reales (todos con foto). Estado por defecto: A pedido.
   let count = 0;
-  for (const [i, p] of PRODUCTS.entries()) {
-    const categoryId = idBySlug.get(p.category);
+  for (const [i, prod] of PRODUCTS.entries()) {
+    const categoryId = idBySlug.get(prod.category);
     if (!categoryId) continue;
     await prisma.product.upsert({
-      where: { slug: p.id },
+      where: { slug: prod.id },
       update: {
-        name: p.name,
+        name: prod.name,
         categoryId,
-        shortDescription: p.shortDescription,
-        description: p.details,
-        benefits: p.benefits,
-        brand: p.brand ?? null,
-        imageUrl: p.image,
+        shortDescription: prod.shortDescription,
+        description: prod.details,
+        benefits: prod.benefits,
+        brand: prod.brand ?? null,
+        imageUrl: prod.image,
         order: i,
+        visible: true,
+        stockStatus: "ON_REQUEST",
       },
       create: {
-        slug: p.id,
-        name: p.name,
+        slug: prod.id,
+        name: prod.name,
         categoryId,
-        shortDescription: p.shortDescription,
-        description: p.details,
-        benefits: p.benefits,
-        brand: p.brand ?? null,
-        imageUrl: p.image,
+        shortDescription: prod.shortDescription,
+        description: prod.details,
+        benefits: prod.benefits,
+        brand: prod.brand ?? null,
+        imageUrl: prod.image,
         price: null,
         priceVisible: false,
         visible: true,
         featured: false,
         order: i,
+        stockStatus: "ON_REQUEST",
       },
     });
     count++;
   }
-  console.log(`✓ ${count} productos`);
+
+  // Oculta (NO borra) los productos que no están en el catálogo real (sin foto/demo).
+  const realSlugs = PRODUCTS.map((prod) => prod.id);
+  const hidden = await prisma.product.updateMany({
+    where: { slug: { notIn: realSlugs } },
+    data: { visible: false },
+  });
+  console.log(
+    `✓ ${count} productos reales visibles · ${hidden.count} sin foto ocultados`
+  );
 
   // 3) Usuario admin
   const email = (process.env.ADMIN_EMAIL ?? "admin@spconfortinfinity.com").toLowerCase();
@@ -68,7 +88,7 @@ async function main() {
   const passwordHash = await bcrypt.hash(password, 10);
   await prisma.adminUser.upsert({
     where: { email },
-    update: {}, // no pisa la contraseña si el admin ya existe
+    update: {},
     create: { email, name: "Administrador", passwordHash, role: "admin" },
   });
   console.log(`✓ Admin listo: ${email}`);
