@@ -33,7 +33,6 @@ export default function Contact() {
 
             <a
               href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-              target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp mt-8 px-8 py-4 text-base"
             >

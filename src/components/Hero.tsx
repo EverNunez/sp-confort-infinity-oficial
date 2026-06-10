@@ -78,7 +78,6 @@ export default function Hero() {
             </a>
             <a
               href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-              target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp"
             >

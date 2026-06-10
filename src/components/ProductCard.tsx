@@ -91,7 +91,6 @@ const ProductCard = forwardRef<
         <div className="mt-4 flex gap-2">
           <a
             href={cta.href}
-            target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp flex-1 px-3 py-2.5 text-xs"
           >

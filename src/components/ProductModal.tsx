@@ -55,7 +55,7 @@ export default function ProductModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 grid max-h-[90vh] w-full max-w-4xl grid-cols-1 overflow-hidden rounded-3xl bg-white shadow-card md:grid-cols-2"
+            className="relative z-10 flex max-h-[90svh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-card md:grid md:max-h-[90vh] md:grid-cols-2"
           >
             <button
               type="button"
@@ -67,7 +67,7 @@ export default function ProductModal({
             </button>
 
             {/* Imagen grande */}
-            <div className="relative aspect-[4/3] bg-sand-100 md:aspect-auto md:h-full">
+            <div className="relative aspect-[4/3] shrink-0 bg-sand-100 md:aspect-auto md:h-full">
               <ProductImage
                 src={product.image}
                 alt={product.name}
@@ -94,7 +94,7 @@ export default function ProductModal({
             </div>
 
             {/* Detalles */}
-            <div className="flex max-h-[90vh] flex-col overflow-y-auto p-7 sm:p-8">
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-7 sm:p-8 md:max-h-[90vh]">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-sand-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-copper-dark">
                   <Tag className="h-3 w-3" />
@@ -146,7 +146,6 @@ export default function ProductModal({
 
               <a
                 href={stockCta(product.name, product.stockStatus).href}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="btn-whatsapp mt-6 w-full"
               >
