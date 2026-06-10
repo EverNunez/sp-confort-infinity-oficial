@@ -19,7 +19,6 @@ export default function FloatingWhatsApp() {
       {show && (
         <motion.a
           href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-          target="_blank"
           rel="noopener noreferrer"
           aria-label="Escribir por WhatsApp"
           initial={{ opacity: 0, scale: 0.6, y: 20 }}

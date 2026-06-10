@@ -71,7 +71,6 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <a
             href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-            target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp hidden sm:inline-flex"
           >
@@ -117,7 +116,6 @@ export default function Header() {
               ))}
               <a
                 href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-                target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
                 className="btn-whatsapp mt-4 w-full"

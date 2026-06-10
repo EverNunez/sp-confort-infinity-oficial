@@ -64,7 +64,6 @@ export default function Footer() {
               <li>
                 <a
                   href={whatsappLink(GENERIC_WHATSAPP_MESSAGE)}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 text-sm text-ink-soft transition-colors hover:text-copper-dark"
                 >
