@@ -16,25 +16,67 @@ const playfair = Playfair_Display({
   weight: ["500", "600", "700"],
 });
 
+const SITE_URL = "https://spconfortinfinity.com";
+const SITE_DESCRIPTION =
+  "Sanitarios, griferías, bachas, inodoros, termocalefones y motores en Paraguay. Atención por WhatsApp.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: `${SITE.name} — ${SITE.tagline}`,
-  description:
-    "Sanitarios, griferías y equipamientos seleccionados para baños y cocinas modernas. Asesoramiento personalizado y compra por WhatsApp.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE.name,
+  authors: [{ name: SITE.name }],
+  creator: SITE.name,
   keywords: [
+    "SP Confort Infinity",
     "sanitarios",
     "griferías",
+    "bachas",
+    "inodoros",
+    "termocalefones",
+    "motores",
+    "Paraguay",
     "baño",
     "cocina",
-    "Paraguay",
-    "SP Confort Infinity",
-    "inodoros",
-    "duchas",
+    "griferías de cocina",
+    "griferías de lavatorio",
+    "griferías de ducha",
   ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: `${SITE.name} — ${SITE.tagline}`,
-    description:
-      "Elegancia, calidad y confort para cada espacio. Catálogo de sanitarios y griferías por WhatsApp.",
     type: "website",
+    locale: "es_PY",
+    url: SITE_URL,
+    siteName: SITE.name,
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/brand/logo-sp-confort-infinity.jpg",
+        width: 290,
+        height: 290,
+        alt: SITE.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE_DESCRIPTION,
+    images: ["/brand/logo-sp-confort-infinity.jpg"],
   },
 };
 
