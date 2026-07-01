@@ -12,3 +12,7 @@ npm-debug.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Imágenes subidas desde el panel admin (runtime). Se versiona solo la carpeta.
+/public/uploads/products/*
+!/public/uploads/products/.gitkeep

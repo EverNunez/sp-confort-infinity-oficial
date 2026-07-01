@@ -342,7 +342,7 @@ export default function ProductForm({
             {uploading ? "Subiendo…" : "Subir imagen"}
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
+              accept="image/jpeg,image/png,image/webp"
               onChange={handleFile}
               disabled={uploading}
               className="hidden"
@@ -350,7 +350,7 @@ export default function ProductForm({
           </label>
           <div className="flex items-center gap-2 text-[11px] text-ink-muted">
             <ImageIcon className="h-3.5 w-3.5" />
-            JPG, PNG, WEBP o AVIF · máx 5MB
+            JPG, PNG o WEBP · máx 5MB
           </div>
           <div>
             <label className="field-label" htmlFor="imgurl">
